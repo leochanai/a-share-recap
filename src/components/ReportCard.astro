@@ -31,26 +31,14 @@ function getChangeColor(change: string) {
   <article class="h-full p-6 rounded-lg border transition-all duration-300"
     style="background-color: var(--color-bg-secondary); border-color: var(--color-border);">
 
-    <!-- Header: Date & Title -->
+    <!-- Header: Date -->
     <div class="flex items-start justify-between mb-4">
-      <div class="flex items-center gap-4">
-        <!-- Date Block -->
-        <div class="text-center">
-          <div class="font-display text-3xl font-semibold leading-none" style="color: var(--color-accent);">
-            {day}
-          </div>
-          <div class="font-mono text-xs mt-1" style="color: var(--color-text-muted);">
-            {month}
-          </div>
+      <div class="flex items-baseline gap-3">
+        <div class="font-display text-3xl font-semibold leading-none" style="color: var(--color-accent);">
+          {day}
         </div>
-
-        <div>
-          <div class="font-mono text-xs uppercase tracking-widest mb-1" style="color: var(--color-text-muted);">
-            {weekday} · {year}
-          </div>
-          <h2 class="text-lg font-semibold group-hover:text-[var(--color-accent)] transition-colors" style="color: var(--color-text-primary);">
-            A股市场复盘
-          </h2>
+        <div class="font-mono text-sm" style="color: var(--color-text-muted);">
+          {month} {year} · {weekday}
         </div>
       </div>
 

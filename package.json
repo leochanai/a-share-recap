@@ -3,8 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "sync": "rsync -av --delete ~/reports/*.md src/content/reports/",
+    "dev": "npm run sync && astro dev",
+    "build": "npm run sync && astro build",
     "preview": "astro preview"
   },
   "dependencies": {

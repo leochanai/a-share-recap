@@ -1,0 +1,350 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   DESIGN SYSTEM: Financial Editorial
+   Inspired by Bloomberg Terminal + The Economist
+   ======================================== */
+
+:root {
+  /* Core palette - Deep ink with amber accents */
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #111111;
+  --color-bg-tertiary: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-border-subtle: #1f1f1f;
+
+  /* Text hierarchy */
+  --color-text-primary: #e8e6e3;
+  --color-text-secondary: #8a8a8a;
+  --color-text-muted: #5a5a5a;
+
+  /* Accent - Amber gold (financial luxury) */
+  --color-accent: #d4a855;
+  --color-accent-dim: #a68542;
+
+  /* Market colors - Chinese convention */
+  --color-up: #e54d42;
+  --color-down: #2aa468;
+  --color-flat: #8a8a8a;
+
+  /* Typography scale */
+  --font-display: "Playfair Display", "Noto Serif SC", Georgia, serif;
+  --font-body: "IBM Plex Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "IBM Plex Mono", "SF Mono", monospace;
+
+  /* Spacing rhythm */
+  --space-unit: 8px;
+}
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600;700&family=Noto+Serif+SC:wght@500;600&display=swap');
+
+/* Base reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+/* Noise texture overlay for depth */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  z-index: 1000;
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+
+.prose {
+  --tw-prose-body: var(--color-text-primary);
+  --tw-prose-headings: var(--color-text-primary);
+  --tw-prose-links: var(--color-accent);
+  --tw-prose-bold: var(--color-text-primary);
+  --tw-prose-counters: var(--color-text-secondary);
+  --tw-prose-bullets: var(--color-accent-dim);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-quotes: var(--color-text-secondary);
+  --tw-prose-quote-borders: var(--color-accent);
+  --tw-prose-th-borders: var(--color-border);
+  --tw-prose-td-borders: var(--color-border-subtle);
+}
+
+.prose h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.prose h2::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 1.2em;
+  background-color: var(--color-accent);
+}
+
+.prose h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.prose strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.prose a:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+/* Lists */
+.prose ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 1.5rem 0;
+}
+
+.prose ul li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-bottom: 0.625rem;
+  color: var(--color-text-primary);
+  line-height: 1.75;
+}
+
+.prose ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  color: var(--color-accent);
+  font-size: 0.875em;
+  font-weight: bold;
+}
+
+/* Horizontal rules */
+.prose hr {
+  border: none;
+  height: 1px;
+  background: var(--color-border);
+  margin: 3rem 0;
+}
+
+/* ========================================
+   TABLES - Financial Data Grid
+   ======================================== */
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin: 1.5rem 0;
+}
+
+.prose thead {
+  background-color: var(--color-bg-tertiary);
+}
+
+.prose th {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-secondary);
+  padding: 0.875rem 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--color-accent-dim);
+}
+
+.prose td {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+}
+
+.prose tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.prose tbody tr:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* All data columns left-aligned */
+.prose td {
+  text-align: left;
+  font-feature-settings: "tnum";
+}
+
+/* First column - stock names */
+.prose td:first-child {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Table wrapper for mobile */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem -1rem;
+  padding: 0 1rem;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideInLeft 0.5s ease-out forwards;
+}
+
+/* Staggered reveal for sections */
+.prose > * {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.prose > *:nth-child(1) { animation-delay: 0.05s; }
+.prose > *:nth-child(2) { animation-delay: 0.1s; }
+.prose > *:nth-child(3) { animation-delay: 0.15s; }
+.prose > *:nth-child(4) { animation-delay: 0.2s; }
+.prose > *:nth-child(5) { animation-delay: 0.25s; }
+.prose > *:nth-child(6) { animation-delay: 0.3s; }
+.prose > *:nth-child(7) { animation-delay: 0.35s; }
+.prose > *:nth-child(8) { animation-delay: 0.4s; }
+.prose > *:nth-child(9) { animation-delay: 0.45s; }
+.prose > *:nth-child(10) { animation-delay: 0.5s; }
+.prose > *:nth-child(n+11) { animation-delay: 0.55s; }
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .prose h1 {
+    font-size: 1.75rem;
+  }
+
+  .prose h2 {
+    font-size: 1.25rem;
+  }
+
+  .prose table {
+    font-size: 0.75rem;
+  }
+
+  .prose th,
+  .prose td {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.text-up { color: var(--color-up); }
+.text-down { color: var(--color-down); }
+.text-flat { color: var(--color-flat); }
+.text-accent { color: var(--color-accent); }
+.text-muted { color: var(--color-text-muted); }
+
+.bg-surface { background-color: var(--color-bg-secondary); }
+.border-subtle { border-color: var(--color-border); }
+
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }

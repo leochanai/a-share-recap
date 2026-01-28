@@ -1,0 +1,68 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'A股每日市场复盘报告 - 专业投资者的每日必读' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{title} | 复盘日志</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b" style="background-color: var(--color-bg-primary); border-color: var(--color-border);">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="group flex items-center gap-3">
+        <span class="text-2xl font-display font-semibold tracking-tight" style="color: var(--color-text-primary);">
+          复盘日志
+        </span>
+        <span class="text-xs font-mono uppercase tracking-widest" style="color: var(--color-accent);">
+          A-Share
+        </span>
+      </a>
+      <div class="hidden sm:flex items-center gap-2 font-mono text-xs" style="color: var(--color-text-muted);">
+        <span class="inline-block w-2 h-2 rounded-full animate-pulse" style="background-color: var(--color-up);"></span>
+        市场数据
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 w-full">
+    <div class="max-w-5xl mx-auto px-6 py-12">
+      <slot />
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t mt-auto" style="background-color: var(--color-bg-secondary); border-color: var(--color-border);">
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-widest mb-2" style="color: var(--color-accent-dim);">
+            免责声明
+          </p>
+          <p class="text-sm" style="color: var(--color-text-muted);">
+            本站内容仅供参考，不构成投资建议。股市有风险，投资需谨慎。
+          </p>
+        </div>
+        <div class="font-mono text-xs" style="color: var(--color-text-muted);">
+          © 2026 复盘日志
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>

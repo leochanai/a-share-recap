@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  report: CollectionEntry<'reports'>;
+}
+
+const { report } = Astro.props;
+
+const dateObj = new Date(report.data.date);
+const weekday = dateObj.toLocaleDateString('zh-CN', { weekday: 'short' });
+const day = dateObj.getDate();
+const month = dateObj.toLocaleDateString('zh-CN', { month: 'short' });
+const year = dateObj.getFullYear();
+---
+
+<a href={`/reports/${report.slug}`} class="report-card group block">
+  <article class="flex items-stretch gap-6 p-5 rounded-none border-l-2 transition-all duration-300"
+    style="background-color: var(--color-bg-secondary); border-color: var(--color-border);">
+
+    <!-- Date Block -->
+    <div class="flex-shrink-0 w-20 text-center">
+      <div class="font-mono text-xs uppercase tracking-widest mb-1" style="color: var(--color-text-muted);">
+        {weekday}
+      </div>
+      <div class="font-display text-4xl font-semibold leading-none" style="color: var(--color-accent);">
+        {day}
+      </div>
+      <div class="font-mono text-xs mt-1" style="color: var(--color-text-muted);">
+        {month} {year}
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="w-px self-stretch" style="background-color: var(--color-border);"></div>
+
+    <!-- Content -->
+    <div class="flex-1 min-w-0">
+      <h2 class="text-lg font-semibold mb-2 group-hover:text-[var(--color-accent)] transition-colors" style="color: var(--color-text-primary);">
+        A股市场复盘
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        {report.data.tags.map((tag) => (
+          <span class="inline-block font-mono text-xs px-2 py-0.5 rounded-sm"
+            style="background-color: var(--color-bg-tertiary); color: var(--color-text-secondary);">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="flex-shrink-0 self-center opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--color-accent);">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+  </article>
+</a>
+
+<style>
+  .report-card:hover article {
+    border-left-color: var(--color-accent) !important;
+    background-color: var(--color-bg-tertiary) !important;
+  }
+</style>

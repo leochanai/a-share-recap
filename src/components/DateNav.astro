@@ -1,0 +1,63 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  prev: CollectionEntry<'reports'> | null;
+  next: CollectionEntry<'reports'> | null;
+}
+
+const { prev, next } = Astro.props;
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('zh-CN', {
+    month: 'short',
+    day: 'numeric',
+    weekday: 'short'
+  });
+}
+---
+
+<nav class="mt-16 pt-8 border-t" style="border-color: var(--color-border);">
+  <div class="grid grid-cols-3 gap-4 items-center">
+    <!-- Previous -->
+    <div class="text-left">
+      {prev ? (
+        <a href={`/reports/${prev.slug}`} class="group inline-flex flex-col gap-1">
+          <span class="font-mono text-xs uppercase tracking-widest" style="color: var(--color-text-muted);">
+            ← 上一篇
+          </span>
+          <span class="text-sm font-medium group-hover:text-[var(--color-accent)] transition-colors" style="color: var(--color-text-secondary);">
+            {formatDate(prev.data.date)}
+          </span>
+        </a>
+      ) : <span />}
+    </div>
+
+    <!-- Home -->
+    <div class="text-center">
+      <a href="/" class="inline-flex items-center gap-2 px-4 py-2 font-mono text-xs uppercase tracking-widest border transition-all duration-300 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+        style="color: var(--color-text-secondary); border-color: var(--color-border);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        目录
+      </a>
+    </div>
+
+    <!-- Next -->
+    <div class="text-right">
+      {next ? (
+        <a href={`/reports/${next.slug}`} class="group inline-flex flex-col gap-1 items-end">
+          <span class="font-mono text-xs uppercase tracking-widest" style="color: var(--color-text-muted);">
+            下一篇 →
+          </span>
+          <span class="text-sm font-medium group-hover:text-[var(--color-accent)] transition-colors" style="color: var(--color-text-secondary);">
+            {formatDate(next.data.date)}
+          </span>
+        </a>
+      ) : <span />}
+    </div>
+  </div>
+</nav>

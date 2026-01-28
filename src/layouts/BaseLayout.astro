@@ -28,9 +28,34 @@ const { title, description = 'A股每日市场复盘报告 - 专业投资者的�
           A-Share
         </span>
       </a>
-      <div class="hidden sm:flex items-center gap-2 font-mono text-xs" style="color: var(--color-text-muted);">
-        <span class="inline-block w-2 h-2 rounded-full animate-pulse" style="background-color: var(--color-up);"></span>
-        市场数据
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-2 font-mono text-xs" style="color: var(--color-text-muted);">
+          <span class="inline-block w-2 h-2 rounded-full animate-pulse" style="background-color: var(--color-up);"></span>
+          市场数据
+        </div>
+
+        <!-- Theme Toggle Button -->
+        <button
+          id="theme-toggle"
+          class="theme-toggle-btn p-2 rounded-lg transition-all duration-200 hover:scale-110"
+          style="background-color: var(--color-bg-tertiary); border: 1px solid var(--color-border);"
+          aria-label="切换主题"
+        >
+          <svg class="theme-icon sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent);">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent); display: none;">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
@@ -65,4 +90,105 @@ const { title, description = 'A股每日市场复盘报告 - 专业投资者的�
 
 <style is:global>
   @import '../styles/global.css';
+
+  /* Theme toggle button styles */
+  .theme-toggle-btn {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .theme-toggle-btn:hover {
+    background-color: var(--color-bg-secondary) !important;
+  }
+
+  .theme-icon {
+    display: block;
+    transition: opacity 0.2s ease;
+  }
+
+  :root[data-theme="dark"] .sun-icon {
+    display: none;
+  }
+
+  :root[data-theme="dark"] .moon-icon {
+    display: block;
+  }
+
+  :root[data-theme="light"] .sun-icon {
+    display: block;
+  }
+
+  :root[data-theme="light"] .moon-icon {
+    display: none;
+  }
 </style>
+
+<script>
+  // Theme management
+  const THEME_KEY = 'theme-preference';
+
+  // Theme colors
+  const THEME_COLORS = {
+    dark: '#0a0a0a',
+    light: '#faf9f7'
+  };
+
+  // Initialize theme
+  function initTheme() {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+
+  // Toggle theme with circle reveal animation
+  function toggleTheme(event) {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    // Remove any existing overlay
+    const existingOverlay = document.querySelector('.theme-transition-overlay');
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
+
+    // Create overlay with OLD theme color (will have a hole punched through it)
+    const overlay = document.createElement('div');
+    overlay.className = 'theme-transition-overlay';
+    overlay.style.background = THEME_COLORS[currentTheme];
+    document.body.appendChild(overlay);
+
+    // Get click position for circle origin
+    const x = event.clientX || window.innerWidth - 40;
+    const y = event.clientY || 40;
+
+    overlay.style.setProperty('--x', `${x}px`);
+    overlay.style.setProperty('--y', `${y}px`);
+
+    // Switch theme immediately (new theme is underneath the overlay)
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem(THEME_KEY, newTheme);
+
+    // Start expanding the hole on next frame
+    requestAnimationFrame(() => {
+      overlay.classList.add('expanding');
+    });
+
+    // Remove overlay after animation completes
+    setTimeout(() => {
+      overlay.remove();
+    }, 850);
+  }
+
+  // Initialize
+  initTheme();
+
+  function setupToggle() {
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.addEventListener('click', toggleTheme);
+  }
+
+  document.addEventListener('DOMContentLoaded', setupToggle);
+  document.addEventListener('astro:page-load', () => { initTheme(); setupToggle(); });
+</script>

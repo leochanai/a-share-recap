@@ -38,10 +38,10 @@ const { title, description = 'A股每日市场复盘报告 - 专业投资者的�
         <button
           id="theme-toggle"
           class="theme-toggle-btn p-2 rounded-lg transition-all duration-200 hover:scale-110"
-          style="background-color: var(--color-bg-tertiary); border: 1px solid var(--color-border);"
           aria-label="切换主题"
         >
-          <svg class="theme-icon sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent);">
+          <!-- Sun icon (shown in dark mode, click to switch to light) -->
+          <svg class="theme-icon sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
             <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -52,7 +52,8 @@ const { title, description = 'A股每日市场复盘报告 - 专业投资者的�
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
-          <svg class="theme-icon moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-accent); display: none;">
+          <!-- Moon icon (shown in light mode, click to switch to dark) -->
+          <svg class="theme-icon moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
         </button>
@@ -95,10 +96,28 @@ const { title, description = 'A股每日市场复盘报告 - 专业投资者的�
   .theme-toggle-btn {
     position: relative;
     cursor: pointer;
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Dark mode - add visible border */
+  :root[data-theme="dark"] .theme-toggle-btn {
+    border: 1px solid #444;
+    background-color: #1a1a1a;
+  }
+
+  :root[data-theme="dark"] .theme-toggle-btn .sun-icon {
+    color: #d4a855;
+  }
+
+  /* Light mode */
+  :root[data-theme="light"] .theme-toggle-btn .moon-icon {
+    color: #1a1a1a;
   }
 
   .theme-toggle-btn:hover {
     background-color: var(--color-bg-secondary) !important;
+    border-color: var(--color-accent) !important;
   }
 
   .theme-icon {

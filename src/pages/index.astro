@@ -5,12 +5,51 @@ import ReportCard from '../components/ReportCard.astro';
 
 const reports = (await getCollection('reports'))
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// 提取大盘概览数据
+function extractMarketOverview(body: string) {
+  const lines = body.split('\n');
+  const indices: { name: string; close: string; change: string }[] = [];
+  let volume = '';
+
+  // 找到大盘概览表格
+  let inTable = false;
+  for (const line of lines) {
+    if (line.includes('| 指数 |')) {
+      inTable = true;
+      continue;
+    }
+    if (inTable && line.startsWith('|---')) continue;
+    if (inTable && line.startsWith('|')) {
+      const parts = line.split('|').map(s => s.trim()).filter(Boolean);
+      if (parts.length >= 3) {
+        indices.push({
+          name: parts[0],
+          close: parts[1],
+          change: parts[2]
+        });
+      }
+    } else if (inTable) {
+      inTable = false;
+    }
+
+    // 提取成交额
+    if (line.includes('两市合计')) {
+      const match = line.match(/两市合计[：:]\s*([\d.]+)\s*万亿/);
+      if (match) {
+        volume = match[1] + '万亿';
+      }
+    }
+  }
+
+  return { indices, volume };
+}
 ---
 
 <BaseLayout title="A股每日复盘">
   <!-- Hero Section -->
-  <section class="mb-16">
-    <div class="mb-8">
+  <section class="mb-12">
+    <div class="mb-6">
       <p class="font-mono text-xs uppercase tracking-widest mb-4" style="color: var(--color-accent);">
         Daily Market Review
       </p>
@@ -21,31 +60,9 @@ const reports = (await getCollection('reports'))
         专业投资者的每日必读。追踪市场脉搏，洞察资金流向，把握投资先机。
       </p>
     </div>
-
-    <!-- Stats Bar -->
-    <div class="flex flex-wrap gap-8 py-6 border-y" style="border-color: var(--color-border);">
-      <div>
-        <div class="font-mono text-3xl font-medium" style="color: var(--color-accent);">
-          {reports.length}
-        </div>
-        <div class="font-mono text-xs uppercase tracking-widest mt-1" style="color: var(--color-text-muted);">
-          份报告
-        </div>
-      </div>
-      {reports.length > 0 && (
-        <div>
-          <div class="font-mono text-3xl font-medium" style="color: var(--color-text-primary);">
-            {reports[0].data.date}
-          </div>
-          <div class="font-mono text-xs uppercase tracking-widest mt-1" style="color: var(--color-text-muted);">
-            最新更新
-          </div>
-        </div>
-      )}
-    </div>
   </section>
 
-  <!-- Report List -->
+  <!-- Report Cards -->
   <section>
     <h2 class="font-mono text-xs uppercase tracking-widest mb-6" style="color: var(--color-text-muted);">
       历史报告 / Archive
@@ -56,12 +73,15 @@ const reports = (await getCollection('reports'))
         <p class="font-mono text-sm">暂无复盘报告</p>
       </div>
     ) : (
-      <div class="space-y-4">
-        {reports.map((report, index) => (
-          <div style={`animation-delay: ${index * 0.05}s`} class="animate-fade-in">
-            <ReportCard report={report} />
-          </div>
-        ))}
+      <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
+        {reports.map((report, index) => {
+          const overview = extractMarketOverview(report.body);
+          return (
+            <div style={`animation-delay: ${index * 0.05}s`} class="animate-fade-in">
+              <ReportCard report={report} overview={overview} />
+            </div>
+          );
+        })}
       </div>
     )}
   </section>
